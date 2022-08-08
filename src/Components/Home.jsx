@@ -41,7 +41,7 @@ export default class Home extends Component {
 
   handleButton = () => {
     const { history } = this.props;
-    history.push('/shopping-cart'); // verificar xx como validar a props history
+    history.push('/shopping-cart');
   }
 
   onInputChange = ({ target }) => {
@@ -88,7 +88,7 @@ export default class Home extends Component {
             data-testid="shopping-cart-button"
             onClick={ this.handleButton }
           >
-            Carrinho de compras
+            Carrinho de compras 
           </button>
 
         </div>
