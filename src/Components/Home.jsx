@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 export default class Home extends Component {
   handleButton = () => {
     const { history } = this.props;
-    history.push('/shopping-cart'); // verificar como validar a props history
+    history.push('/shopping-cart'); // verificar xx como validar a props history
   }
 
   render() {
