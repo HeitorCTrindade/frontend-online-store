@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { getCategories } from '../services/api';
 
 export default class Home extends Component {
@@ -29,6 +30,11 @@ export default class Home extends Component {
     )));
   }
 
+  handleButton = () => {
+    const { history } = this.props;
+    history.push('/shopping-cart'); // verificar xx como validar a props history
+  }
+
   render() {
     const { inputSearch, categories } = this.state;
     return (
@@ -47,9 +53,20 @@ export default class Home extends Component {
           <p data-testid="home-initial-message">
             Digite algum termo de pesquisa ou escolha uma categoria.
           </p>
+          <button
+            type="button"
+            data-testid="shopping-cart-button"
+            onClick={ this.handleButton }
+          >
+            Carrinho de compras
+          </button>
 
         </div>
       </main>
     );
   }
 }
+
+Home.propTypes = {
+  history: PropTypes.string.isRequired,
+};
