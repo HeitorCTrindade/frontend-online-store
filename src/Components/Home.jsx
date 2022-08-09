@@ -47,7 +47,11 @@ export default class Home extends Component {
   onInputChange = ({ target }) => {
     this.setState({ inputSearch: target.value });
   }
-  //
+
+  clickAddCart = (produto) => {
+    localStorage.setItem('cartItens', xablau);
+    localStorage.getItem('cartItens');
+  }
 
   renderResults = () => {
     const { searchResult } = this.state;
@@ -56,6 +60,13 @@ export default class Home extends Component {
         <p>{ produto.title }</p>
         <img src={ produto.thumbnail } alt="" />
         <p>{produto.price}</p>
+        <button
+          type="submit"
+          data-testid="product-add-to-cart"
+          onClick={ () => this.clickAddCart(produto) }
+        >
+          Adicionar ao carrinho
+        </button>
       </div>
     ));
   }
