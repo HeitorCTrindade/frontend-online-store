@@ -88,7 +88,7 @@ export default class Home extends Component {
             data-testid="shopping-cart-button"
             onClick={ this.handleButton }
           >
-            Carrinho de compras 
+            Carrinho de compras
           </button>
 
         </div>
