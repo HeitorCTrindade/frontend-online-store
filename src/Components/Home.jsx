@@ -64,11 +64,33 @@ export default class Home extends Component {
     this.setState({ inputSearch: target.value });
   }
 
+  handleButtonDescription = (id) => {
+    const { history } = this.props;
+    history.push(`/shopping-cart/${id}`);
+  }
+
   renderResults = (param) => (param.map((produto) => (
-    <div data-testid="product" key={ produto.id }>
-      <p>{ produto.title }</p>
-      <img src={ produto.thumbnail } alt="" />
-      <p>{produto.price}</p>
+    <div
+      key={ produto.id }
+      data-testid="product-detail-link"
+      onClick={ () => { this.handleButtonDescription(produto.id); } }
+      onKeyPress={ () => {} }
+      role="button"
+      tabIndex="0"
+    >
+      <div data-testid="product">
+        <p>{ produto.title }</p>
+        <img src={ produto.thumbnail } alt="" />
+        <p>{produto.price}</p>
+      </div>
+      {/* <button
+          type="button"
+          data-testid="product-detail-link"
+          name={ produto.id }
+          onClick={ this.handleButtonDescription }
+        >
+          Detalhes do produto
+        </button> */}
     </div>
   )))
 
