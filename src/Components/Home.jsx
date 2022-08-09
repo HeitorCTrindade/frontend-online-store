@@ -47,6 +47,7 @@ export default class Home extends Component {
   onInputChange = ({ target }) => {
     this.setState({ inputSearch: target.value });
   }
+  //
 
   renderResults = () => {
     const { searchResult } = this.state;
