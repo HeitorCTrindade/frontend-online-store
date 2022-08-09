@@ -1,12 +1,21 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { getCategories } from '../services/api';
+import { getProductsFromQuery, getCategories } from '../services/api';
 
 export default class Home extends Component {
   state = {
+    searchResult: [],
     inputSearch: '',
     categories: [],
-  };
+  }
+
+  clickSearch = async () => { // state resultado da pesquisa não está sendo atualizado na primeira vez
+    const { inputSearch } = this.state;
+    console.log(await getProductsFromQuery(inputSearch));
+    this.setState({
+      searchResult: (await getProductsFromQuery(inputSearch)).results,
+    });
+  }
 
   handleChange = ({ target }) => {
     const { name, value } = target;
@@ -32,27 +41,49 @@ export default class Home extends Component {
 
   handleButton = () => {
     const { history } = this.props;
-    history.push('/shopping-cart'); // verificar xx como validar a props history
+    history.push('/shopping-cart');
+  }
+
+  onInputChange = ({ target }) => {
+    this.setState({ inputSearch: target.value });
+  }
+  //
+
+  renderResults = () => {
+    const { searchResult } = this.state;
+    return searchResult.map((produto) => (
+      <div data-testid="product" key={ produto.id }>
+        <p>{ produto.title }</p>
+        <img src={ produto.thumbnail } alt="" />
+        <p>{produto.price}</p>
+      </div>
+    ));
   }
 
   render() {
-    const { inputSearch, categories } = this.state;
+    const { searchResult, categories } = this.state;
     return (
       <main>
+        <div>
+          <input type="text" data-testid="query-input" onChange={ this.onInputChange } />
+          <button
+            data-testid="query-button"
+            type="submit"
+            onClick={ this.clickSearch }
+          >
+            Pesquisar
+          </button>
+          <p data-testid="home-initial-message">
+            Digite algum termo de pesquisa ou escolha uma categoria.
+          </p>
+          { searchResult.length > 0
+            ? this.renderResults() : 'Nenhum produto foi encontrado'}
+        </div>
         <div>
           <p>Categorias</p>
           { categories.length === 0 ? <> </> : this.createRadiosElements() }
         </div>
         <div>
-          <input
-            name={ inputSearch }
-            type="text"
-            value={ inputSearch }
-            onChange={ this.handleChange }
-          />
-          <p data-testid="home-initial-message">
-            Digite algum termo de pesquisa ou escolha uma categoria.
-          </p>
           <button
             type="button"
             data-testid="shopping-cart-button"
@@ -68,5 +99,7 @@ export default class Home extends Component {
 }
 
 Home.propTypes = {
-  history: PropTypes.string.isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+  }).isRequired,
 };
