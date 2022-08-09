@@ -47,15 +47,54 @@ export default class Home extends Component {
   onInputChange = ({ target }) => {
     this.setState({ inputSearch: target.value });
   }
-  //
+
+  handleButtonDescription = (id) => {
+    const { history } = this.props;
+    history.push(`/shopping-cart/${id}`);
+  }
+
+  // renderResults = () => {
+  //   const { searchResult } = this.state;
+  //   return searchResult.map((produto) => (
+  //     <div
+  //       data-testid="product-detail-link"
+  //       key={ produto.id }
+  //       onClick={ () => { this.handleButtonDescription(produto.id); } }
+  //       onKeyPress={ () => {} }
+  //       role="button"
+  //       tabIndex="0"
+  //       value={ produto.id }
+  //     >
+  //       <p>{ produto.title }</p>
+  //       <img src={ produto.thumbnail } alt="" />
+  //       <p>{produto.price}</p>
+  //     </div>
+  //   ));
+  // }
 
   renderResults = () => {
     const { searchResult } = this.state;
     return searchResult.map((produto) => (
-      <div data-testid="product" key={ produto.id }>
+      <div
+        data-testid="product"
+        key={ produto.id }
+        onClick={ () => { this.handleButtonDescription(produto.id); } }
+        onKeyPress={ () => {} }
+        role="button"
+        tabIndex="0"
+        value={ produto.id }
+      >
         <p>{ produto.title }</p>
         <img src={ produto.thumbnail } alt="" />
         <p>{produto.price}</p>
+        {/* <button
+          type="button"
+          data-testid="product-detail-link"
+          name={ produto.id }
+          onClick={ this.handleButtonDescription }
+        >
+          Detalhes do produto
+        </button> */}
       </div>
     ));
   }
