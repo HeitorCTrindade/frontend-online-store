@@ -1,17 +1,27 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { getProductsFromQuery, getCategories } from '../services/api';
+import { getProductsFromQuery,
+  getCategories, getProductsFromCategory } from '../services/api';
 
 export default class Home extends Component {
   state = {
     searchResult: [],
     inputSearch: '',
     categories: [],
+    categoryId: '',
+    categoryArray: [],
   }
 
-  clickSearch = async () => { // state resultado da pesquisa não está sendo atualizado na primeira vez
+  filterCategory = ({ target }) => {
+    this.setState({ categoryId: target.id }, async () => {
+      const { categoryId } = this.state;
+      this.setState({
+        categoryArray: (await getProductsFromCategory(categoryId)).results });
+    });
+  }
+
+  clickSearch = async () => {
     const { inputSearch } = this.state;
-    console.log(await getProductsFromQuery(inputSearch));
     this.setState({
       searchResult: (await getProductsFromQuery(inputSearch)).results,
     });
@@ -33,7 +43,13 @@ export default class Home extends Component {
     const { categories } = this.state;
     return (categories.map((category) => (
       <label key={ category.id } htmlFor={ category.id } data-testid="category">
-        <input key={ category.id } type="radio" id={ category.id } />
+        <input
+          key={ category.id }
+          type="radio"
+          id={ category.id }
+          name="categorySelect"
+          onClick={ this.filterCategory }
+        />
         { category.name }
       </label>
     )));
@@ -49,30 +65,48 @@ export default class Home extends Component {
   }
 
   clickAddCart = (produto) => {
-    localStorage.setItem('cartItens', xablau);
-    localStorage.getItem('cartItens');
+    // localStorage.setItem('cartItens', JSON.stringify(produto));
+    if (!JSON.parse(localStorage.getItem('cartItens'))) {
+      localStorage.setItem('cartItens', JSON.stringify([]));
+    }
+    const tempCartItens = JSON.parse(localStorage.getItem('cartItens'));
+    const newCartItens = [...tempCartItens, produto];
+    localStorage.setItem('cartItens', JSON.stringify(newCartItens));
   }
 
-  renderResults = () => {
-    const { searchResult } = this.state;
-    return searchResult.map((produto) => (
-      <div data-testid="product" key={ produto.id }>
-        <p>{ produto.title }</p>
-        <img src={ produto.thumbnail } alt="" />
-        <p>{produto.price}</p>
-        <button
-          type="submit"
-          data-testid="product-add-to-cart"
-          onClick={ () => this.clickAddCart(produto) }
-        >
-          Adicionar ao carrinho
-        </button>
-      </div>
-    ));
+  handleButtonDescription = (id) => {
+    const { history } = this.props;
+    history.push(`/shopping-cart/${id}`);
   }
+
+  renderResults = (param) => (param.map((produto) => (
+    <div key={ produto.id }>
+      <div
+        key={ produto.id }
+        data-testid="product-detail-link"
+        onClick={ () => { this.handleButtonDescription(produto.id); } }
+        onKeyPress={ () => {} }
+        role="button"
+        tabIndex="0"
+      >
+        <div data-testid="product">
+          <p>{ produto.title }</p>
+          <img src={ produto.thumbnail } alt="" />
+          <p>{produto.price}</p>
+        </div>
+      </div>
+      <button
+        type="submit"
+        data-testid="product-add-to-cart"
+        onClick={ () => this.clickAddCart(produto) }
+      >
+        Adicionar ao carrinho
+      </button>
+    </div>
+  )))
 
   render() {
-    const { searchResult, categories } = this.state;
+    const { searchResult, categories, categoryArray } = this.state;
     return (
       <main>
         <div>
@@ -88,7 +122,7 @@ export default class Home extends Component {
             Digite algum termo de pesquisa ou escolha uma categoria.
           </p>
           { searchResult.length > 0
-            ? this.renderResults() : 'Nenhum produto foi encontrado'}
+            ? this.renderResults(searchResult) : 'Nenhum produto foi encontrado'}
         </div>
         <div>
           <p>Categorias</p>
@@ -102,7 +136,7 @@ export default class Home extends Component {
           >
             Carrinho de compras
           </button>
-
+          <div>{ categoryArray && this.renderResults(categoryArray)}</div>
         </div>
       </main>
     );
