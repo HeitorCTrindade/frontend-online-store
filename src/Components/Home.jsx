@@ -64,33 +64,44 @@ export default class Home extends Component {
     this.setState({ inputSearch: target.value });
   }
 
+  clickAddCart = (produto) => {
+    // localStorage.setItem('cartItens', JSON.stringify(produto));
+    if (!JSON.parse(localStorage.getItem('cartItens'))) {
+      localStorage.setItem('cartItens', JSON.stringify([]));
+    }
+    const tempCartItens = JSON.parse(localStorage.getItem('cartItens'));
+    const newCartItens = [...tempCartItens, produto];
+    localStorage.setItem('cartItens', JSON.stringify(newCartItens));
+  }
+
   handleButtonDescription = (id) => {
     const { history } = this.props;
     history.push(`/shopping-cart/${id}`);
   }
 
   renderResults = (param) => (param.map((produto) => (
-    <div
-      key={ produto.id }
-      data-testid="product-detail-link"
-      onClick={ () => { this.handleButtonDescription(produto.id); } }
-      onKeyPress={ () => {} }
-      role="button"
-      tabIndex="0"
-    >
-      <div data-testid="product">
-        <p>{ produto.title }</p>
-        <img src={ produto.thumbnail } alt="" />
-        <p>{produto.price}</p>
+    <div key={ produto.id }>
+      <div
+        key={ produto.id }
+        data-testid="product-detail-link"
+        onClick={ () => { this.handleButtonDescription(produto.id); } }
+        onKeyPress={ () => {} }
+        role="button"
+        tabIndex="0"
+      >
+        <div data-testid="product">
+          <p>{ produto.title }</p>
+          <img src={ produto.thumbnail } alt="" />
+          <p>{produto.price}</p>
+        </div>
       </div>
-      {/* <button
-          type="button"
-          data-testid="product-detail-link"
-          name={ produto.id }
-          onClick={ this.handleButtonDescription }
-        >
-          Detalhes do produto
-        </button> */}
+      <button
+        type="submit"
+        data-testid="product-add-to-cart"
+        onClick={ () => this.clickAddCart(produto) }
+      >
+        Adicionar ao carrinho
+      </button>
     </div>
   )))
 
