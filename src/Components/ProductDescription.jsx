@@ -20,6 +20,18 @@ export default class ProductDescription extends Component {
     history.push('/shopping-cart');
   }
 
+  clickAddCart = () => {
+    const { productDetails } = this.state;
+    console.log('teste');
+    // localStorage.setItem('cartItens', JSON.stringify(produto));
+    if (!JSON.parse(localStorage.getItem('cartItens'))) {
+      localStorage.setItem('cartItens', JSON.stringify([]));
+    }
+    const tempCartItens = JSON.parse(localStorage.getItem('cartItens'));
+    const newCartItens = [...tempCartItens, productDetails];
+    localStorage.setItem('cartItens', JSON.stringify(newCartItens));
+  }
+
   render() {
     const { productDetails: { title, thumbnail, price } } = this.state;
 
@@ -30,6 +42,14 @@ export default class ProductDescription extends Component {
         <img data-testid="product-detail-image" src={ thumbnail } alt="" />
         <p data-testid="product-detail-price">{ price }</p>
 
+        <button
+          type="submit"
+          // data-testid="product-add-to-c art"
+          onClick={ this.clickAddCart }
+          data-testid="product-detail-add-to-cart"
+        >
+          Adicionar ao carrinho
+        </button>
         <button
           type="button"
           data-testid="shopping-cart-button"
