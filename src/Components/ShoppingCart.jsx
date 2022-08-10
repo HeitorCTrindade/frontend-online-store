@@ -42,10 +42,12 @@ export default class ShoppingCart extends Component {
   }
 
   render() {
+    const { arrayProducts } = this.state;
     return (
       <div>
-        <p data-testid="shopping-cart-empty-message">Seu carrinho está vazio</p>
-        { this.generateCartItens() }
+        { arrayProducts === null
+          ? <p data-testid="shopping-cart-empty-message">Seu carrinho está vazio</p>
+          : this.generateCartItens() }
       </div>
     );
   }
