@@ -44,7 +44,7 @@ export default class ProductDescription extends Component {
 
         <button
           type="submit"
-          // data-testid="product-add-to-cart"
+          // data-testid="product-add-to-c art"
           onClick={ this.clickAddCart }
           data-testid="product-detail-add-to-cart"
         >
