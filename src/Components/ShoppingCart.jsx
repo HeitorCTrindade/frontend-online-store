@@ -12,21 +12,33 @@ export default class ShoppingCart extends Component {
 
   generateCartItens = () => {
     const { arrayProducts } = this.state;
-    console.log(arrayProducts);
+    const filteredProducts = [];
 
-    const test = arrayProducts.map((produto) => (arrayProducts.filter((produtoFilter) => produto.id === produtoFilter.id)));
-
-    console.log(test);
+    for (let i = 0; i < arrayProducts.length; i += 1) {
+      if (!filteredProducts.some((product) => JSON.stringify(product)
+      === JSON.stringify(arrayProducts[i]))) {
+        filteredProducts.push(arrayProducts[i]);
+      }
+    }
 
     return (
-      arrayProducts.map((produto) => (
-        <div data-testid="product" key={ produto.id }>
-          <p>{ produto.title }</p>
-          <img src={ produto.thumbnail } alt="" />
-          <p>{produto.price}</p>
+      filteredProducts.map((product) => (
+        <div data-testid="product" key={ product.id }>
+          <p data-testid="shopping-cart-product-name">{ product.title }</p>
+          <img src={ product.thumbnail } alt="" />
+          <p>{product.price}</p>
+          <p data-testid="shopping-cart-product-quantity">
+            { this.checkQuantityProductsTypeInCart(product) }
+          </p>
         </div>
       ))
     );
+  }
+
+  checkQuantityProductsTypeInCart = (productToCheck) => {
+    const { arrayProducts } = this.state;
+    return arrayProducts.filter((product) => JSON.stringify(product)
+    === JSON.stringify(productToCheck)).length;
   }
 
   render() {
@@ -39,12 +51,12 @@ export default class ShoppingCart extends Component {
   }
 }
 
-// clickAddCart = (produto) => {
-//   // localStorage.setItem('cartItens', JSON.stringify(produto));
+// clickAddCart = (product) => {
+//   // localStorage.setItem('cartItens', JSON.stringify(product));
 //   if (!JSON.parse(localStorage.getItem('cartItens'))) {
 //     localStorage.setItem('cartItens', JSON.stringify([]));
 //   }
 //   const tempCartItens = JSON.parse(localStorage.getItem('cartItens'));
-//   const newCartItens = [...tempCartItens, produto];
+//   const newCartItens = [...tempCartItens, product];
 //   localStorage.setItem('cartItens', JSON.stringify(newCartItens));
 // }
