@@ -21,15 +21,26 @@ export default class ProductDescription extends Component {
   }
 
   clickAddCart = () => {
-    const { productDetails } = this.state;
-    console.log('teste');
+    const { productDetails: productToCart } = this.state;
     // localStorage.setItem('cartItens', JSON.stringify(produto));
     if (!JSON.parse(localStorage.getItem('cartItens'))) {
       localStorage.setItem('cartItens', JSON.stringify([]));
     }
     const tempCartItens = JSON.parse(localStorage.getItem('cartItens'));
-    const newCartItens = [...tempCartItens, productDetails];
-    localStorage.setItem('cartItens', JSON.stringify(newCartItens));
+
+    if (tempCartItens.some((product) => product.id === productToCart.id)) {
+      const arrayToSave = tempCartItens.map((product) => {
+        if (product.id === productToCart.id) {
+          product.quantity += 1;
+        }
+        return product;
+      });
+      localStorage.setItem('cartItens', JSON.stringify(arrayToSave));
+    } else {
+      productToCart.quantity = 1;
+      const newCartItens = [...tempCartItens, productToCart];
+      localStorage.setItem('cartItens', JSON.stringify(newCartItens));
+    }
   }
 
   render() {

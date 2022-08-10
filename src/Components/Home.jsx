@@ -64,14 +64,26 @@ export default class Home extends Component {
     this.setState({ inputSearch: target.value });
   }
 
-  clickAddCart = (produto) => {
-    // localStorage.setItem('cartItens', JSON.stringify(produto));
+  clickAddCart = (productToCart) => {
+    // localStorage.setItem('cartItens', JSON.stringify(productToCart));
     if (!JSON.parse(localStorage.getItem('cartItens'))) {
       localStorage.setItem('cartItens', JSON.stringify([]));
     }
     const tempCartItens = JSON.parse(localStorage.getItem('cartItens'));
-    const newCartItens = [...tempCartItens, produto];
-    localStorage.setItem('cartItens', JSON.stringify(newCartItens));
+
+    if (tempCartItens.some((product) => product.id === productToCart.id)) {
+      const arrayToSave = tempCartItens.map((product) => {
+        if (product.id === productToCart.id) {
+          product.quantity += 1;
+        }
+        return product;
+      });
+      localStorage.setItem('cartItens', JSON.stringify(arrayToSave));
+    } else {
+      productToCart.quantity = 1;
+      const newCartItens = [...tempCartItens, productToCart];
+      localStorage.setItem('cartItens', JSON.stringify(newCartItens));
+    }
   }
 
   handleButtonDescription = (id) => {
@@ -79,26 +91,26 @@ export default class Home extends Component {
     history.push(`/shopping-cart/${id}`);
   }
 
-  renderResults = (param) => (param.map((produto) => (
-    <div key={ produto.id }>
+  renderResults = (param) => (param.map((productToCart) => (
+    <div key={ productToCart.id }>
       <div
-        key={ produto.id }
+        key={ productToCart.id }
         data-testid="product-detail-link"
-        onClick={ () => { this.handleButtonDescription(produto.id); } }
+        onClick={ () => { this.handleButtonDescription(productToCart.id); } }
         onKeyPress={ () => {} }
         role="button"
         tabIndex="0"
       >
         <div data-testid="product">
-          <p>{ produto.title }</p>
-          <img src={ produto.thumbnail } alt="" />
-          <p>{produto.price}</p>
+          <p>{ productToCart.title }</p>
+          <img src={ productToCart.thumbnail } alt="" />
+          <p>{productToCart.price}</p>
         </div>
       </div>
       <button
         type="submit"
         data-testid="product-add-to-cart"
-        onClick={ () => this.clickAddCart(produto) }
+        onClick={ () => this.clickAddCart(productToCart) }
       >
         Adicionar ao carrinho
       </button>
