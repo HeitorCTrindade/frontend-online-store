@@ -15,8 +15,8 @@ export default class ShoppingCart extends Component {
     const filteredProducts = [];
 
     for (let i = 0; i < arrayProducts.length; i += 1) {
-      if (!filteredProducts.some((product) => JSON.stringify(product)
-      === JSON.stringify(arrayProducts[i]))) {
+      if (!filteredProducts.some((product) => product.id
+      === arrayProducts[i].id)) {
         filteredProducts.push(arrayProducts[i]);
       }
     }
@@ -37,8 +37,8 @@ export default class ShoppingCart extends Component {
 
   checkQuantityProductsTypeInCart = (productToCheck) => {
     const { arrayProducts } = this.state;
-    return arrayProducts.filter((product) => JSON.stringify(product)
-    === JSON.stringify(productToCheck)).length;
+    return arrayProducts.filter((product) => product.id
+    === productToCheck.id).length;
   }
 
   render() {

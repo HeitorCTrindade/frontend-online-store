@@ -21,6 +21,29 @@ export default class ProductDescription extends Component {
     history.push('/shopping-cart');
   }
 
+  clickAddCart = () => {
+    const { productDetails: productToCart } = this.state;
+    // localStorage.setItem('cartItens', JSON.stringify(produto));
+    if (!JSON.parse(localStorage.getItem('cartItens'))) {
+      localStorage.setItem('cartItens', JSON.stringify([]));
+    }
+    const tempCartItens = JSON.parse(localStorage.getItem('cartItens'));
+
+    if (tempCartItens.some((product) => product.id === productToCart.id)) {
+      const arrayToSave = tempCartItens.map((product) => {
+        if (product.id === productToCart.id) {
+          product.quantity += 1;
+        }
+        return product;
+      });
+      localStorage.setItem('cartItens', JSON.stringify(arrayToSave));
+    } else {
+      productToCart.quantity = 1;
+      const newCartItens = [...tempCartItens, productToCart];
+      localStorage.setItem('cartItens', JSON.stringify(newCartItens));
+    }
+  }
+
   render() {
     const { productDetails: { title, thumbnail, price } } = this.state;
     const { match: { params: { id } } } = this.props;
@@ -31,6 +54,14 @@ export default class ProductDescription extends Component {
         <img data-testid="product-detail-image" src={ thumbnail } alt="" />
         <p data-testid="product-detail-price">{ price }</p>
 
+        <button
+          type="submit"
+          // data-testid="product-add-to-c art"
+          onClick={ this.clickAddCart }
+          data-testid="product-detail-add-to-cart"
+        >
+          Adicionar ao carrinho
+        </button>
         <button
           type="button"
           data-testid="shopping-cart-button"
