@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { getProductById } from '../services/api';
+import Evaluation from './Evaluation';
 
 export default class ProductDescription extends Component {
   state = {
@@ -45,7 +46,7 @@ export default class ProductDescription extends Component {
 
   render() {
     const { productDetails: { title, thumbnail, price } } = this.state;
-
+    const { match: { params: { id } } } = this.props;
     return (
       <div>
         PAGINA DO PRODUTO
@@ -68,6 +69,7 @@ export default class ProductDescription extends Component {
         >
           Carrinho de compras
         </button>
+        <Evaluation id={ id } />
       </div>
     );
   }
