@@ -52,7 +52,7 @@ export default class ProductDescription extends Component {
     const acctualCartItens = JSON.parse(localStorage.getItem('cartItens'));
     console.log(productDetails);
     let contQuantityProduct = 0;
-    if (acctualCartItens === null) return contQuantityProducts;
+    if (acctualCartItens === null) return contQuantityProduct;
     acctualCartItens.forEach((product) => {
       if (product.id === productDetails.id) {
         contQuantityProduct = product.quantity;
@@ -62,7 +62,10 @@ export default class ProductDescription extends Component {
   }
 
   render() {
-    const { quantityProducts, productDetails: { title, thumbnail, price } } = this.state;
+    const {
+      quantityProducts,
+      productDetails: { title, thumbnail, price },
+    } = this.state;
     const { match: { params: { id } } } = this.props;
     return (
       <div>
@@ -70,7 +73,6 @@ export default class ProductDescription extends Component {
         <p data-testid="product-detail-name">{ title }</p>
         <img data-testid="product-detail-image" src={ thumbnail } alt="" />
         <p data-testid="product-detail-price">{ price }</p>
-
         <button
           type="submit"
           // data-testid="product-add-to-c art"

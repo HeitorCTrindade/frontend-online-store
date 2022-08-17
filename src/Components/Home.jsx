@@ -117,6 +117,8 @@ export default class Home extends Component {
       >
         Adicionar ao carrinho
       </button>
+      { productToCart.shipping.free_shipping
+        && <p data-testid="free-shipping"> OBA FRETE FREE!! </p> }
     </div>
   )))
 
