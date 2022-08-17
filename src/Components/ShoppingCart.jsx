@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 export default class ShoppingCart extends Component {
   state = {
@@ -101,15 +102,34 @@ export default class ShoppingCart extends Component {
 
   render() {
     const { arrayProducts } = this.state;
+    const { history } = this.props;
     return (
-      <div>
-        { arrayProducts === null
-          ? <p data-testid="shopping-cart-empty-message">Seu carrinho está vazio</p>
-          : this.generateCartItens() }
-      </div>
+      <section>
+        <div>
+          { arrayProducts === null
+            ? <p data-testid="shopping-cart-empty-message">Seu carrinho está vazio</p>
+            : this.generateCartItens() }
+        </div>
+        <div>
+          <button
+            type="button"
+            name="remove-button"
+            data-testid="checkout-products"
+            onClick={ () => history.push('/checkout') }
+          >
+            Finalizar compra
+          </button>
+        </div>
+      </section>
     );
   }
 }
+
+ShoppingCart.propTypes = {
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+  }).isRequired,
+};
 
 // clickAddCart = (product) => {
 //   // localStorage.setItem('cartItens', JSON.stringify(product));
