@@ -6,6 +6,7 @@ import Evaluation from './Evaluation';
 export default class ProductDescription extends Component {
   state = {
     productDetails: {},
+    quantityProducts: 4,
   };
 
   async componentDidMount() {
@@ -14,6 +15,7 @@ export default class ProductDescription extends Component {
     this.setState({
       productDetails: productDetailsFromApi,
     });
+    this.acctualQuantityOfProducts(productDetailsFromApi);
   }
 
   handleButton = () => {
@@ -37,15 +39,30 @@ export default class ProductDescription extends Component {
         return product;
       });
       localStorage.setItem('cartItens', JSON.stringify(arrayToSave));
+      this.acctualQuantityOfProducts(productToCart);
     } else {
       productToCart.quantity = 1;
       const newCartItens = [...tempCartItens, productToCart];
       localStorage.setItem('cartItens', JSON.stringify(newCartItens));
+      this.acctualQuantityOfProducts(productToCart);
     }
   }
 
+  acctualQuantityOfProducts = (productDetails) => {
+    const acctualCartItens = JSON.parse(localStorage.getItem('cartItens'));
+    console.log(productDetails);
+    let contQuantityProduct = 0;
+    if (acctualCartItens === null) return contQuantityProducts;
+    acctualCartItens.forEach((product) => {
+      if (product.id === productDetails.id) {
+        contQuantityProduct = product.quantity;
+      }
+    });
+    this.setState({ quantityProducts: contQuantityProduct });
+  }
+
   render() {
-    const { productDetails: { title, thumbnail, price } } = this.state;
+    const { quantityProducts, productDetails: { title, thumbnail, price } } = this.state;
     const { match: { params: { id } } } = this.props;
     return (
       <div>
@@ -69,6 +86,9 @@ export default class ProductDescription extends Component {
         >
           Carrinho de compras
         </button>
+        <p data-testid="shopping-cart-size">
+          { quantityProducts }
+        </p>
         <Evaluation id={ id } />
       </div>
     );

@@ -10,6 +10,7 @@ export default class Home extends Component {
     categories: [],
     categoryId: '',
     categoryArray: [],
+    quantityProducts: 0,
   }
 
   filterCategory = ({ target }) => {
@@ -37,6 +38,7 @@ export default class Home extends Component {
   componentDidMount = async () => {
     const result = await getCategories();
     this.setState({ categories: result });
+    this.acctualQuantityOfProducts();
   }
 
   createRadiosElements = () => {
@@ -84,6 +86,7 @@ export default class Home extends Component {
       const newCartItens = [...tempCartItens, productToCart];
       localStorage.setItem('cartItens', JSON.stringify(newCartItens));
     }
+    this.acctualQuantityOfProducts();
   }
 
   handleButtonDescription = (id) => {
@@ -117,8 +120,18 @@ export default class Home extends Component {
     </div>
   )))
 
+  acctualQuantityOfProducts = () => {
+    const acctualCartItens = JSON.parse(localStorage.getItem('cartItens'));
+    let contQuantityProducts = 0;
+    if (acctualCartItens === null) return contQuantityProducts;
+    acctualCartItens.forEach((product) => {
+      contQuantityProducts += product.quantity;
+    });
+    this.setState({ quantityProducts: contQuantityProducts });
+  }
+
   render() {
-    const { searchResult, categories, categoryArray } = this.state;
+    const { searchResult, categories, categoryArray, quantityProducts } = this.state;
     return (
       <main>
         <div>
@@ -149,6 +162,11 @@ export default class Home extends Component {
             Carrinho de compras
           </button>
           <div>{ categoryArray && this.renderResults(categoryArray)}</div>
+          [ produtos no carrinho:
+          <p data-testid="shopping-cart-size">
+            { quantityProducts }
+          </p>
+          ]
         </div>
       </main>
     );
