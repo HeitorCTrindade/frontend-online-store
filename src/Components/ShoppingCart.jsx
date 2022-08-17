@@ -74,7 +74,8 @@ export default class ShoppingCart extends Component {
     }
     if (event.target.name === 'increase-button') {
       const tempArrayProducts = arrayProducts.map((product) => {
-        if (product.id === productToCheck.id) {
+        if (product.id === productToCheck.id
+          && product.quantity < productToCheck.available_quantity) {
           product.quantity += 1;
         }
         return product;
